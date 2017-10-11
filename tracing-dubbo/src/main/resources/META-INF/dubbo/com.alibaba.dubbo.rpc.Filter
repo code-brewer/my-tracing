@@ -1,2 +1,2 @@
-traceProviderFilter=cn.sumpay.common.dubbo.filter.TraceProviderFilter
-traceConsumerFilter=cn.sumpay.common.dubbo.filter.TraceConsumerFilter
+tracerProviderFilter=cn.sumpay.tracing.dubbo.filter.TracerProviderFilter
+tracerConsumerFilter=cn.sumpay.tracing.dubbo.filter.TracerConsumerFilter
