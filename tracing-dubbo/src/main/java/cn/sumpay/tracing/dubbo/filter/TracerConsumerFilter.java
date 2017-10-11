@@ -88,7 +88,7 @@ public class TracerConsumerFilter implements Filter{
      * @param span
      * @param invocation
      */
-    private void attachTraceInfo(Tracer tracer, Span span, Invocation invocation) {
+    private void attachTraceInfo(Tracer tracer, Span span, final Invocation invocation) {
         tracer.inject(span.context(), Format.Builtin.TEXT_MAP, new TextMap() {
             @Override
             public void put(String key, String value) {
