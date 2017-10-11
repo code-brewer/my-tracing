@@ -1,0 +1,48 @@
+package cn.sumpay.tracing.dubbo;
+
+import cn.sumpay.tracing.context.TracingContext;
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.alibaba.fastjson.JSONObject;
+import io.opentracing.Span;
+
+/**
+ * @author heyc
+ */
+public class RpcTracingContext implements TracingContext{
+
+    public static final String TRACING_SPAN = "rpc_tracing_span";
+
+    private RpcTracingContext(){
+    }
+
+    private static RpcTracingContext instance;
+
+    /**
+     * getInstance
+     * @return
+     */
+    public static RpcTracingContext getInstance(){
+        if (instance == null){
+            synchronized (RpcTracingContext.class){
+                if (instance == null){
+                    instance = new RpcTracingContext();
+                }
+            }
+        }
+        return instance;
+    }
+
+    @Override
+    public Span getTracingSpan() {
+        String spanJson = RpcContext.getContext().getAttachment(TRACING_SPAN);
+        if (spanJson != null && !(spanJson == null || spanJson.length() == 0)) {
+            return JSONObject.parseObject(spanJson,Span.class);
+        }
+        return null;
+    }
+
+    @Override
+    public void setTracingSpan(Span span) {
+        RpcContext.getContext().setAttachment(TRACING_SPAN, JSONObject.toJSONString(span));
+    }
+}
