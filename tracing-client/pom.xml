@@ -11,31 +11,49 @@
     <artifactId>tracing-client</artifactId>
 
     <properties>
-        <opentracing.version>0.30.0</opentracing.version>
+        <brave.version>4.8.0</brave.version>
+        <springframework.version>4.3.7.RELEASE</springframework.version>
     </properties>
 
     <dependencies>
-        <!-- opentracing -->
         <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-api</artifactId>
-            <version>${opentracing.version}</version>
+            <groupId>cn.sumpay</groupId>
+            <artifactId>tracing-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--brave -->
+        <dependency>
+            <groupId>io.opentracing.brave</groupId>
+            <artifactId>brave-opentracing</artifactId>
+            <version>0.22.1</version>
         </dependency>
         <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-mock</artifactId>
-            <version>${opentracing.version}</version>
-            <scope>test</scope>
+            <groupId>io.zipkin.brave</groupId>
+            <artifactId>brave-web-servlet-filter</artifactId>
+            <version>${brave.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-util</artifactId>
-            <version>${opentracing.version}</version>
+            <groupId>io.zipkin.brave</groupId>
+            <artifactId>brave-core-spring</artifactId>
+            <version>${brave.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-noop</artifactId>
-            <version>${opentracing.version}</version>
+            <groupId>io.zipkin.brave</groupId>
+            <artifactId>brave-spancollector-local</artifactId>
+            <version>${brave.version}</version>
+        </dependency>
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${springframework.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${springframework.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
