@@ -10,7 +10,7 @@ import zipkin2.reporter.Reporter;
  */
 public class LoggingReporter implements Reporter<Span> {
 
-    private static Logger tracerLogger = LoggerFactory.getLogger("tracing");
+    private static Logger tracerLogger = LoggerFactory.getLogger("trace");
 
     @Override
     public void report(Span span) {

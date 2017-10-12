@@ -12,6 +12,6 @@ public class LoggingTracerBuilder implements TracerBuilder{
 
     @Override
     public Tracer build() {
-        return BraveTracer.create(Tracing.newBuilder().spanReporter(new LoggingReporter()).build());
+        return BraveTracer.create(Tracing.newBuilder().localServiceName(TracerConfig.APPLICATION==null?"unknown":TracerConfig.APPLICATION).spanReporter(new LoggingReporter()).build());
     }
 }

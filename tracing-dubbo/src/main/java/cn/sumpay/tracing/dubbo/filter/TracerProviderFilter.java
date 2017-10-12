@@ -2,8 +2,8 @@ package cn.sumpay.tracing.dubbo.filter;
 
 import cn.sumpay.tracing.TracerAttachment;
 import cn.sumpay.tracing.TracerFactory;
-import cn.sumpay.tracing.TracerState;
-import cn.sumpay.tracing.context.ThreadLocalTracingContext;
+import cn.sumpay.tracing.TracerConfig;
+import cn.sumpay.tracing.context.TracingContext;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
@@ -34,13 +34,13 @@ public class TracerProviderFilter implements Filter{
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         /** 不记录 **/
         Tracer tracer = TracerFactory.DEFAULT.getTracer();
-        if (!TracerState.ENABLE || tracer == null || tracer instanceof NoopTracer){
+        if (!TracerConfig.ENABLE || tracer == null || tracer instanceof NoopTracer){
             return invoker.invoke(invocation);
         }
         Span span = null;
         try {
             span = extractTraceInfo(invocation, tracer);
-            ThreadLocalTracingContext.getInstance().setTracingSpan(span);
+            TracingContext.setSpan(span);
         }catch (Exception e){
             LOG.error("获取span异常: {}",e.getMessage());
         }

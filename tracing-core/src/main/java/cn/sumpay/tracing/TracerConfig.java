@@ -1,6 +1,8 @@
 package cn.sumpay.tracing;
 
-public class TracerState {
+public class TracerConfig {
+
+    public static String APPLICATION;
 
     public static boolean ENABLE = true;
 
