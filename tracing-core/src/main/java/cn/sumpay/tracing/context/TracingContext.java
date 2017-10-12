@@ -15,8 +15,14 @@ public interface TracingContext {
         ThreadLocalTracingContext.getInstance().setTracingSpan(span);
     }
 
+    static void removeSpan(){
+        ThreadLocalTracingContext.getInstance().removeTracingSpan();
+    }
+
     Span getTracingSpan();
 
     void setTracingSpan(Span span);
+
+    void removeTracingSpan();
 
 }

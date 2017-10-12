@@ -45,4 +45,9 @@ public class RpcTracingContext implements TracingContext{
     public void setTracingSpan(Span span) {
         RpcContext.getContext().setAttachment(TRACING_SPAN, JSONObject.toJSONString(span));
     }
+
+    @Override
+    public void removeTracingSpan() {
+        RpcContext.getContext().removeAttachment(TRACING_SPAN);
+    }
 }

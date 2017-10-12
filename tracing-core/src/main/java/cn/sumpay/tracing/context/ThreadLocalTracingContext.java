@@ -38,4 +38,9 @@ public class ThreadLocalTracingContext implements TracingContext{
     public void setTracingSpan(Span span) {
         LOCAL_SPAN.set(span);
     }
+
+    @Override
+    public void removeTracingSpan() {
+        LOCAL_SPAN.remove();
+    }
 }

@@ -13,6 +13,7 @@ import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMapExtractAdapter;
+import io.opentracing.tag.Tags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +75,7 @@ public class TracerProviderFilter implements Filter{
     protected Span extractTraceInfo(Invocation invocation, Tracer tracer) {
         String application = RpcContext.getContext().getUrl().getParameter("application");
         String operationName = application + "_" + invocation.getMethodName();
-        Tracer.SpanBuilder span = tracer.buildSpan(operationName);
+        Tracer.SpanBuilder span = tracer.buildSpan(operationName).withTag(Tags.SPAN_KIND.getKey(),Tags.SPAN_KIND_SERVER);
         try {
             SpanContext spanContext = tracer.extract(Format.Builtin.TEXT_MAP, new TextMapExtractAdapter(invocation.getAttachments()));
             if (spanContext != null) {

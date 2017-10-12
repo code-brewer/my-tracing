@@ -13,6 +13,7 @@ import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
+import io.opentracing.tag.Tags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ public class TracerConsumerFilter implements Filter{
             /** 构建span **/
             String application = RpcContext.getContext().getUrl().getParameter("application");
             String operationName = application + "_" + invocation.getMethodName();
-            Tracer.SpanBuilder spanBuilder = tracer.buildSpan(operationName);
+            Tracer.SpanBuilder spanBuilder = tracer.buildSpan(operationName).withTag(Tags.SPAN_KIND.getKey(),Tags.SPAN_KIND_CLIENT);
             Span activeSpan = TracingContext.getSpan();
             if (activeSpan != null) {
                 spanBuilder.asChildOf(activeSpan);
