@@ -9,36 +9,41 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tracing-mvc</artifactId>
+    <artifactId>spring-boot-starter-tracing</artifactId>
 
     <properties>
-        <springframework.version>4.3.7.RELEASE</springframework.version>
-        <servlet.version>3.0.1</servlet.version>
+        <springboot.version>1.5.2.RELEASE</springboot.version>
     </properties>
 
     <dependencies>
+        <!-- core -->
         <dependency>
             <groupId>cn.sumpay.tracing</groupId>
             <artifactId>tracing-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- spring -->
+        <!-- zipkin -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${springframework.version}</version>
-            <scope>provided</scope>
+            <groupId>cn.sumpay.tracing</groupId>
+            <artifactId>tracing-zipkin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- mvc -->
+        <dependency>
+            <groupId>cn.sumpay.tracing</groupId>
+            <artifactId>tracing-mvc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- dubbo -->
+        <dependency>
+            <groupId>cn.sumpay.tracing</groupId>
+            <artifactId>tracing-dubbo</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${springframework.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>${springboot.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

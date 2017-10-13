@@ -13,6 +13,7 @@
         <module>tracing-dubbo</module>
         <module>tracing-mvc</module>
         <module>tracing-zipkin</module>
+        <module>spring-boot-starter-tracing</module>
     </modules>
 
     <properties>

@@ -20,7 +20,7 @@
         <dependency>
             <groupId>cn.sumpay.tracing</groupId>
             <artifactId>tracing-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <!--brave -->
         <dependency>
