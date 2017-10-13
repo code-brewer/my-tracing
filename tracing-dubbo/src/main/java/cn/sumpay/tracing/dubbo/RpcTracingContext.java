@@ -1,5 +1,6 @@
 package cn.sumpay.tracing.dubbo;
 
+import cn.sumpay.tracing.TracerAnalyser;
 import cn.sumpay.tracing.context.TracingContext;
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSONObject;
@@ -49,5 +50,10 @@ public class RpcTracingContext implements TracingContext{
     @Override
     public void removeTracingSpan() {
         RpcContext.getContext().removeAttachment(TRACING_SPAN);
+    }
+
+    @Override
+    public void setTracerAnalysis(TracerAnalyser tracerAnalyser) {
+
     }
 }

@@ -2,3 +2,6 @@ server:
   port: 8080
 trace:
   serviceName: tracing-demo
+logging:
+  file: tracing-demo.log
+  level: info

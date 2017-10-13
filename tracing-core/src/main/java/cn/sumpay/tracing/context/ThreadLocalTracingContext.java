@@ -1,6 +1,9 @@
 package cn.sumpay.tracing.context;
 
+import cn.sumpay.tracing.TracerAnalyser;
+import cn.sumpay.tracing.TracerConfig;
 import io.opentracing.Span;
+import org.slf4j.MDC;
 
 /**
  * @author heyc
@@ -13,6 +16,8 @@ public class ThreadLocalTracingContext implements TracingContext{
     }
 
     private static ThreadLocalTracingContext instance;
+
+    private TracerAnalyser tracerAnalyser;
 
     /**
      * getInstance
@@ -37,10 +42,21 @@ public class ThreadLocalTracingContext implements TracingContext{
     @Override
     public void setTracingSpan(Span span) {
         LOCAL_SPAN.set(span);
+        if(TracerConfig.MDCENABLE && tracerAnalyser != null){
+            MDC.put(TRACE_MDC,tracerAnalyser.findTraceId(span));
+        }
     }
 
     @Override
     public void removeTracingSpan() {
         LOCAL_SPAN.remove();
+        if(TracerConfig.MDCENABLE){
+            MDC.remove(TRACE_MDC);
+        }
+    }
+
+    @Override
+    public void setTracerAnalysis(TracerAnalyser tracerAnalyser) {
+        this.tracerAnalyser = tracerAnalyser;
     }
 }

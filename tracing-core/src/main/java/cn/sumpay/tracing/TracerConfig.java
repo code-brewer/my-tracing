@@ -10,5 +10,7 @@ public class TracerConfig {
 
     public static boolean RESPONSE = true;
 
+    public static boolean MDCENABLE = true;
+
 
 }
