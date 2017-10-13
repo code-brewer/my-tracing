@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguratio=\
+cn.sumpay.tracing.TracingAutoConfiguration,\
+cn.sumpay.tracing.TracingAutoInerceptor
