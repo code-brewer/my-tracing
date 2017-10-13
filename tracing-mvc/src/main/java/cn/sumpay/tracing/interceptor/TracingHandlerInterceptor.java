@@ -35,23 +35,22 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private Tracer tracer;
 
-    private ThreadLocal<Span> spanThreadLocal = new ThreadLocal<Span>();
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!TracerConfig.ENABLE || request.getAttribute(SPAN_MVC) != null) {
             return true; // already handled (possibly due to async request)
         }
         try {
-            Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getServletPath()).withTag(Tags.SPAN_KIND.getKey(),Tags.SPAN_KIND_SERVER);
+            Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getServletPath()).withTag(Tags.SPAN_KIND.getKey(),Tags.SPAN_KIND_CLIENT);
             Span span = spanBuilder.startManual();
             if (TracerConfig.REQUEST){
-                span.setTag("request",JSONObject.toJSONString(request));
+                span.setTag("request",JSONObject.toJSONString(request.getParameterMap()));
             }
             span.setTag(TracerAttachment.TYPE,"mvc");
             span.setTag(TracerAttachment.METHOD,request.getRequestURI());
             span.setTag("remoteAddr",request.getRemoteAddr());
-            spanThreadLocal.set(span);
+            span.finish();
+            TracingContext.setSpan(span);
         }catch (Exception e){
             LOG.error("preHandle span error: " + e.getMessage());
         }
@@ -63,14 +62,6 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
         super.afterCompletion(request, response, handler, ex);
         try {
             TracingContext.removeSpan();
-            Span span = spanThreadLocal.get();
-            if (span != null){
-                if (TracerConfig.RESPONSE){
-                    span.setTag("response", JSONObject.toJSONString(response));
-                }
-                span.finish();
-                spanThreadLocal.remove();
-            }
         }catch (Exception e){
             LOG.error("stop span error: " + e.getMessage());
         }
