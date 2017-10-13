@@ -5,5 +5,4 @@ package cn.sumpay.tracing.logger;
  */
 public class LoggerUtil {
 
-
 }

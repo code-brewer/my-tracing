@@ -40,6 +40,8 @@ public interface TracerFactory {
                 Iterator<TracerBuilder> implementations = ServiceLoader.load(TracerBuilder.class, TracerBuilder.class.getClassLoader()).iterator();
                 if (implementations.hasNext()) {
                     tracer = implementations.next().build();
+                }else {
+                    LOG.error("Could not find TracerBuilder by SPI Service.");
                 }
             } catch (Exception e) {
                 LOG.warn("DefaultTracerFactory load Tracer fail.", e);

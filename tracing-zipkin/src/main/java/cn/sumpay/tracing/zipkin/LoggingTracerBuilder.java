@@ -1,8 +1,10 @@
-package cn.sumpay.tracing;
+package cn.sumpay.tracing.zipkin;
 
 import brave.Tracing;
 import brave.opentracing.BraveTracer;
-import cn.sumpay.tracing.reporter.LoggingReporter;
+import cn.sumpay.tracing.TracerBuilder;
+import cn.sumpay.tracing.TracerConfig;
+import cn.sumpay.tracing.zipkin.reporter.LoggingReporter;
 import io.opentracing.Tracer;
 
 /**
