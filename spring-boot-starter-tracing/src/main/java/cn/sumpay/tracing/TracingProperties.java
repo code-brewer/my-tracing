@@ -12,6 +12,8 @@ public class TracingProperties {
 
     private String serviceName;
 
+    private boolean mvcRequestEnable;
+
     @PostConstruct
     public void init(){
         TracerConfig.APPLICATION = serviceName;
@@ -23,5 +25,13 @@ public class TracingProperties {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public boolean isMvcRequestEnable() {
+        return mvcRequestEnable;
+    }
+
+    public void setMvcRequestEnable(boolean mvcRequestEnable) {
+        this.mvcRequestEnable = mvcRequestEnable;
     }
 }

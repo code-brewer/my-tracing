@@ -2,6 +2,7 @@ server:
   port: 8080
 trace:
   serviceName: tracing-demo
+  mvcRequestEnable: false
 logging:
   file: tracing-demo.log
   level: info

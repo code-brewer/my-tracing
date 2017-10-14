@@ -24,6 +24,18 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private static final String SPAN_MVC = "span-mvc";
 
+    private boolean requestEnable = false;
+
+    private boolean responseEnable = false;
+
+    public void setRequestEnable(boolean requestEnable) {
+        this.requestEnable = requestEnable;
+    }
+
+    public void setResponseEnable(boolean responseEnable) {
+        this.responseEnable = responseEnable;
+    }
+
     public TracingHandlerInterceptor(){
         this(TracerFactory.DEFAULT.getTracer());
     }
@@ -43,7 +55,7 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
         try {
             Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getServletPath()).withTag(Tags.SPAN_KIND.getKey(),Tags.SPAN_KIND_CLIENT);
             Span span = spanBuilder.startManual();
-            if (TracerConfig.REQUEST){
+            if (TracerConfig.REQUEST && requestEnable){
                 span.setTag("request",JSONObject.toJSONString(request.getParameterMap()));
             }
             span.setTag(TracerAttachment.TYPE,"mvc");
