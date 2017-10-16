@@ -12,9 +12,9 @@ public class TracingProperties {
 
     private String serviceName;
 
-    private boolean webEnable;
+    private boolean webEnable = true;
 
-    private boolean webRequestEnable;
+    private boolean webRequestEnable = false;
 
     @PostConstruct
     public void init(){

@@ -26,7 +26,7 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private boolean responseEnable = false;
 
-    private boolean webEnable = false;
+    private boolean webEnable = true;
 
     public void setRequestEnable(boolean requestEnable) {
         this.requestEnable = requestEnable;
@@ -65,8 +65,8 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
             span.setTag(TracerAttachment.TYPE,"mvc");
             span.setTag(TracerAttachment.METHOD,request.getRequestURI());
             span.setTag("remoteAddr",request.getRemoteAddr());
-            span.finish();
             TracingContext.setSpan(span);
+            span.finish();
         }catch (Exception e){
             LOG.error("preHandle span error: " + e.getMessage());
         }

@@ -22,7 +22,7 @@ public class TracingConsumer {
 
     private static Logger LOG = LoggerFactory.getLogger(TracingConsumer.class);
 
-    private static Pattern TRACE_PATTERN = Pattern.compile(".+\\s+trace\\s+\\[\\w+]\\s*-\\s*\\r?\\s*(\\[?\\{.+}]?)$");
+    private static Pattern TRACE_PATTERN = Pattern.compile(".+\\s+trace\\s+\\[\\w*]\\s*-\\s*\\r?\\s*(\\[?\\{.+}]?)$");
 
     @Value("${zipkin.server.url:}")
     private String zipKinUrl;
