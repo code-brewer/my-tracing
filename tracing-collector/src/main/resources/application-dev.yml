@@ -1,0 +1,11 @@
+spring:
+  kafka:
+    bootstrap-servers: 192.168.13.252:9092
+    consumer:
+      group-id: tracing-collector-group
+zipkin:
+  server:
+     url: http://192.168.13.210:9411
+logging:
+  level: info
+  file: tracing-collector.log

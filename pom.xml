@@ -13,7 +13,8 @@
         <module>tracing-dubbo</module>
         <module>tracing-mvc</module>
         <module>tracing-zipkin</module>
-        <module>tracing-demo</module>
+        <!--<module>tracing-demo</module>
+        <module>tracing-collector</module>-->
         <module>spring-boot-starter-tracing</module>
     </modules>
 
@@ -22,7 +23,30 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
-
+    <repositories>
+        <repository>
+            <id>Sumpay</id>
+            <name>Sumpay Repository</name>
+            <url>http://192.168.8.240:8081/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Sumpay</id>
+            <name>Sumpay Repository</name>
+            <url>http://192.168.8.240:8081/nexus/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <distributionManagement>
+        <repository>
+            <id>Sumpay-releases</id>
+            <url>http://192.168.8.240:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>Sumpay-snapshots</id>
+            <url>http://192.168.8.240:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
     <build>
         <plugins>
             <!-- compiler插件, 设定JDK版本 -->

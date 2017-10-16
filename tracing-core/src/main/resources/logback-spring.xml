@@ -2,7 +2,7 @@
 <configuration scan="false" scanPeriod="30 seconds">
     <!-- 环境变量 -->
     <springProperty scope="context" name="logLevel" source="logging.level" defaultValue="DEBUG"/>
-    <springProperty scope="context" name="logFile" source="logging.file" defaultValue="logback-spring.log"/>
+    <springProperty scope="context" name="logFile" source="logging.file" defaultValue="logback-spring-default.log"/>
     <springProperty scope="context" name="maxHistory" source="logging.maxHistory" defaultValue="30"/>
     <springProperty scope="context" name="logPattern" source="logging.pattern" defaultValue="%d{HH:mm:ss.SSS} [%thread] %-5level %logger [%X{traceId}] - %msg%n"/>
     <!-- ConsoleAppender -->
@@ -43,6 +43,7 @@
     <logger name="org.crsh.ssh" level="WARN"/>
     <logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="ERROR"/>
     <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
+    <logger name="org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration" level="WARN"/>
     <logger name="org.springframework.boot.actuate.endpoint.jmx" additivity="false">
         <appender-ref ref="DEBUG_LEVEL_REMAPPER"/>
     </logger>

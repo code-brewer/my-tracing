@@ -12,6 +12,8 @@ public class TracingProperties {
 
     private String serviceName;
 
+    private boolean mvcEnable;
+
     private boolean mvcRequestEnable;
 
     @PostConstruct
@@ -33,5 +35,13 @@ public class TracingProperties {
 
     public void setMvcRequestEnable(boolean mvcRequestEnable) {
         this.mvcRequestEnable = mvcRequestEnable;
+    }
+
+    public boolean isMvcEnable() {
+        return mvcEnable;
+    }
+
+    public void setMvcEnable(boolean mvcEnable) {
+        this.mvcEnable = mvcEnable;
     }
 }
