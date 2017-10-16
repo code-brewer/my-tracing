@@ -21,11 +21,10 @@ public class TracingAutoInerceptor extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        if (tracingProperties.isMvcEnable()){
-            TracingHandlerInterceptor interceptor = new TracingHandlerInterceptor();
-            interceptor.setRequestEnable(tracingProperties.isMvcRequestEnable());
-            registry.addInterceptor(interceptor).addPathPatterns("/**");
-            super.addInterceptors(registry);
-        }
+        TracingHandlerInterceptor interceptor = new TracingHandlerInterceptor();
+        interceptor.setWebEnable(tracingProperties.isWebEnable());
+        interceptor.setRequestEnable(tracingProperties.isWebRequestEnable());
+        registry.addInterceptor(interceptor).addPathPatterns("/**");
+        super.addInterceptors(registry);
     }
 }

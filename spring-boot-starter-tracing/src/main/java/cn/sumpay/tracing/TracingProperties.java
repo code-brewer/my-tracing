@@ -12,9 +12,9 @@ public class TracingProperties {
 
     private String serviceName;
 
-    private boolean mvcEnable;
+    private boolean webEnable;
 
-    private boolean mvcRequestEnable;
+    private boolean webRequestEnable;
 
     @PostConstruct
     public void init(){
@@ -29,19 +29,19 @@ public class TracingProperties {
         this.serviceName = serviceName;
     }
 
-    public boolean isMvcRequestEnable() {
-        return mvcRequestEnable;
+    public boolean isWebEnable() {
+        return webEnable;
     }
 
-    public void setMvcRequestEnable(boolean mvcRequestEnable) {
-        this.mvcRequestEnable = mvcRequestEnable;
+    public void setWebEnable(boolean webEnable) {
+        this.webEnable = webEnable;
     }
 
-    public boolean isMvcEnable() {
-        return mvcEnable;
+    public boolean isWebRequestEnable() {
+        return webRequestEnable;
     }
 
-    public void setMvcEnable(boolean mvcEnable) {
-        this.mvcEnable = mvcEnable;
+    public void setWebRequestEnable(boolean webRequestEnable) {
+        this.webRequestEnable = webRequestEnable;
     }
 }

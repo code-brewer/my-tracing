@@ -22,11 +22,11 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private Logger LOG = LoggerFactory.getLogger(TracingHandlerInterceptor.class);
 
-    private static final String SPAN_MVC = "span-mvc";
-
     private boolean requestEnable = false;
 
     private boolean responseEnable = false;
+
+    private boolean webEnable = false;
 
     public void setRequestEnable(boolean requestEnable) {
         this.requestEnable = requestEnable;
@@ -34,6 +34,10 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
 
     public void setResponseEnable(boolean responseEnable) {
         this.responseEnable = responseEnable;
+    }
+
+    public void setWebEnable(boolean webEnable) {
+        this.webEnable = webEnable;
     }
 
     public TracingHandlerInterceptor(){
@@ -49,7 +53,7 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!TracerConfig.ENABLE || request.getAttribute(SPAN_MVC) != null) {
+        if (!TracerConfig.ENABLE || !webEnable) {
             return true; // already handled (possibly due to async request)
         }
         try {
