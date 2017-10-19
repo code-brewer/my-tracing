@@ -11,5 +11,27 @@
 
     <artifactId>dubbo-plugin</artifactId>
 
+    <properties>
+        <dubbo.version>2.5.3</dubbo.version>
+    </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.sumpay.tracing</groupId>
+            <artifactId>tracing-agent-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>${dubbo.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 </project>

@@ -1,6 +1,7 @@
 package cn.sumpay.tracing.agent.core.plugin;
 
 import cn.sumpay.tracing.agent.core.plugin.bytebuddy.AbstractJunction;
+import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.EnhancePluginDefine;
 import cn.sumpay.tracing.agent.core.plugin.match.ClassMatch;
 import cn.sumpay.tracing.agent.core.plugin.match.IndirectMatch;
 import cn.sumpay.tracing.agent.core.plugin.match.NameMatch;
@@ -23,17 +24,15 @@ import static net.bytebuddy.matcher.ElementMatchers.not;
  * @author heyc
  */
 public class PluginFinder {
-    private final Map<String, AbstractClassEnhancePluginDefine> nameMatchDefine = new HashMap<String, AbstractClassEnhancePluginDefine>();
-    private final List<AbstractClassEnhancePluginDefine> signatureMatchDefine = new LinkedList<AbstractClassEnhancePluginDefine>();
+    private final Map<String, EnhancePluginDefine> nameMatchDefine = new HashMap<String, EnhancePluginDefine>();
+    private final List<EnhancePluginDefine> signatureMatchDefine = new LinkedList<EnhancePluginDefine>();
 
-    public PluginFinder(List<AbstractClassEnhancePluginDefine> plugins) {
-        for (AbstractClassEnhancePluginDefine plugin : plugins) {
+    public PluginFinder(List<EnhancePluginDefine> plugins) {
+        for (EnhancePluginDefine plugin : plugins) {
             ClassMatch match = plugin.enhanceClass();
-
             if (match == null) {
                 continue;
             }
-
             if (match instanceof NameMatch) {
                 NameMatch nameMatch = (NameMatch)match;
                 nameMatchDefine.put(nameMatch.getClassName(), plugin);
@@ -43,14 +42,13 @@ public class PluginFinder {
         }
     }
 
-    public AbstractClassEnhancePluginDefine find(TypeDescription typeDescription,
-        ClassLoader classLoader) {
+    public EnhancePluginDefine find(TypeDescription typeDescription, ClassLoader classLoader) {
         String typeName = typeDescription.getTypeName();
         if (nameMatchDefine.containsKey(typeName)) {
             return nameMatchDefine.get(typeName);
         }
 
-        for (AbstractClassEnhancePluginDefine pluginDefine : signatureMatchDefine) {
+        for (EnhancePluginDefine pluginDefine : signatureMatchDefine) {
             IndirectMatch match = (IndirectMatch)pluginDefine.enhanceClass();
             if (match.isMatch(typeDescription)) {
                 return pluginDefine;
@@ -68,7 +66,7 @@ public class PluginFinder {
             }
         };
         judge = judge.and(not(isInterface()));
-        for (AbstractClassEnhancePluginDefine define : signatureMatchDefine) {
+        for (EnhancePluginDefine define : signatureMatchDefine) {
             ClassMatch match = define.enhanceClass();
             if (match instanceof IndirectMatch) {
                 judge = judge.or(((IndirectMatch)match).buildJunction());

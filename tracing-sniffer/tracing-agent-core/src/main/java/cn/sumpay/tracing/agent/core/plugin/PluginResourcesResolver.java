@@ -23,13 +23,11 @@ public class PluginResourcesResolver {
         Enumeration<URL> urls;
         try {
             urls = getDefaultClassLoader().getResources("tracing-plugin.def");
-
             while (urls.hasMoreElements()) {
                 URL pluginUrl = urls.nextElement();
                 cfgUrlPaths.add(pluginUrl);
                 logger.info("find tracing plugin define in {}", pluginUrl);
             }
-
             return cfgUrlPaths;
         } catch (IOException e) {
             logger.error("read resources failure.", e);

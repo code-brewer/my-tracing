@@ -1,11 +1,14 @@
 package cn.sumpay.tracing.agent.core.plugin;
 
+import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.EnhancePluginDefine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * @author heyc
@@ -49,9 +52,20 @@ public class PluginBootstrap {
                 logger.error("{} load plugin [{}] failure.", t.getMessage(), pluginDefine.getDefineClass());
             }
         }
-
         return plugins;
+    }
 
+    /**
+     * spiLoad
+     * @return
+     */
+    public List<EnhancePluginDefine> spiLoad(){
+        List<EnhancePluginDefine> pluginDefines = new ArrayList<EnhancePluginDefine>();
+        Iterator<EnhancePluginDefine> iterator = ServiceLoader.load(EnhancePluginDefine.class).iterator();
+        while (iterator.hasNext()){
+            pluginDefines.add(iterator.next());
+        }
+        return pluginDefines;
     }
 
 }

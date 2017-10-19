@@ -1,7 +1,7 @@
 package cn.sumpay.tracing.agent.core.plugin;
 
 import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.ClassEnhancePluginDefine;
-import cn.sumpay.tracing.agent.core.plugin.match.ClassMatch;
+import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.EnhancePluginDefine;
 import cn.sumpay.tracing.util.StringUtil;
 import net.bytebuddy.dynamic.DynamicType;
 import org.slf4j.Logger;
@@ -12,8 +12,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * It provides the outline of enhancing the target class.
  * If you want to know more about enhancing, you should go to see {@link ClassEnhancePluginDefine}
+ * @author heyc
  */
-public abstract class AbstractClassEnhancePluginDefine {
+public abstract class AbstractClassEnhancePluginDefine implements EnhancePluginDefine{
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractClassEnhancePluginDefine.class);
 
@@ -26,6 +27,7 @@ public abstract class AbstractClassEnhancePluginDefine {
      * @return the new builder, or <code>null</code> if not be enhanced.
      * @throws PluginException, when set builder failure.
      */
+    @Override
     public DynamicType.Builder<?> define(String transformClassName,DynamicType.Builder<?> builder, ClassLoader classLoader) throws PluginException {
         String interceptorDefineClassName = this.getClass().getName();
 
@@ -59,16 +61,6 @@ public abstract class AbstractClassEnhancePluginDefine {
 
         return newClassBuilder;
     }
-
-    protected abstract DynamicType.Builder<?> enhance(String enhanceOriginClassName,
-                                                      DynamicType.Builder<?> newClassBuilder, ClassLoader classLoader) throws PluginException;
-
-    /**
-     * Define the {@link ClassMatch} for filtering class.
-     *
-     * @return {@link ClassMatch}
-     */
-    protected abstract ClassMatch enhanceClass();
 
     /**
      * Witness classname list. Why need witness classname? Let's see like this: A library existed two released versions

@@ -45,7 +45,7 @@ public abstract class ClassEnhancePluginDefine extends AbstractClassEnhancePlugi
      * @return new byte-buddy's builder for further manipulation.
      */
     @Override
-    protected DynamicType.Builder<?> enhance(String enhanceOriginClassName,
+    public DynamicType.Builder<?> enhance(String enhanceOriginClassName,
                                              DynamicType.Builder<?> newClassBuilder, ClassLoader classLoader) throws PluginException {
         newClassBuilder = this.enhanceClass(enhanceOriginClassName, newClassBuilder, classLoader);
 

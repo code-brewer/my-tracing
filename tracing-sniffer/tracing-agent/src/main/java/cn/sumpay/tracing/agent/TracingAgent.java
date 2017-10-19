@@ -2,10 +2,10 @@ package cn.sumpay.tracing.agent;
 
 import cn.sumpay.tracing.agent.core.boot.ServiceManager;
 import cn.sumpay.tracing.agent.core.conf.SnifferConfigInitializer;
-import cn.sumpay.tracing.agent.core.plugin.AbstractClassEnhancePluginDefine;
 import cn.sumpay.tracing.agent.core.plugin.PluginBootstrap;
 import cn.sumpay.tracing.agent.core.plugin.PluginException;
 import cn.sumpay.tracing.agent.core.plugin.PluginFinder;
+import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.EnhancePluginDefine;
 import com.alibaba.ttl.threadpool.agent.TtlTransformer;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.description.type.TypeDescription;
@@ -47,7 +47,7 @@ public class TracingAgent {
         SnifferConfigInitializer.initialize();
         logger.info("******************** [SnifferConfigInitializer.initialize] success.");
 
-        final PluginFinder pluginFinder = new PluginFinder(new PluginBootstrap().loadPlugins());
+        final PluginFinder pluginFinder = new PluginFinder(new PluginBootstrap().spiLoad());
 
         logger.info("******************** [service boot] start.");
         ServiceManager.INSTANCE.boot();
@@ -63,7 +63,7 @@ public class TracingAgent {
         new AgentBuilder.Default().type(pluginFinder.buildMatch()).transform(new AgentBuilder.Transformer() {
             @Override
             public DynamicType.Builder<?> transform(DynamicType.Builder<?> builder, TypeDescription typeDescription, ClassLoader classLoader, JavaModule module) {
-                AbstractClassEnhancePluginDefine pluginDefine = pluginFinder.find(typeDescription, classLoader);
+                EnhancePluginDefine pluginDefine = pluginFinder.find(typeDescription, classLoader);
                 if (pluginDefine != null) {
                     DynamicType.Builder<?> newBuilder = pluginDefine.define(typeDescription.getTypeName(), builder, classLoader);
                     if (newBuilder != null) {
