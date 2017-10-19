@@ -13,9 +13,11 @@
         <module>tracing-dubbo</module>
         <module>tracing-mvc</module>
         <module>tracing-zipkin</module>
-        <!--<module>tracing-demo</module>
-        <module>tracing-collector</module>-->
+        <module>tracing-demo</module>
+        <!--<module>tracing-collector</module>-->
         <module>spring-boot-starter-tracing</module>
+        <module>tracing-rocketmq</module>
+        <module>tracing-sniffer</module>
     </modules>
 
     <properties>
