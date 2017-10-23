@@ -1,5 +1,6 @@
 package cn.sumpay.tracing.agent.core.plugin.interceptor.enhance;
 
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.loader.InterceptorInstanceLoader;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.Origin;
@@ -18,7 +19,7 @@ import java.util.concurrent.Callable;
  * @author wusheng
  */
 public class StaticMethodsInter {
-    private static final Logger logger = LoggerFactory.getLogger(StaticMethodsInter.class);
+    private static final BootLogger logger = BootLogger.getLogger(StaticMethodsInter.class);
 
     /**
      * A class full name, and instanceof {@link StaticMethodsAroundInterceptor}
@@ -57,7 +58,7 @@ public class StaticMethodsInter {
         try {
             interceptor.beforeMethod(clazz, method, allArguments, method.getParameterTypes(), result);
         } catch (Throwable t) {
-            logger.error("{} class[{}] before static method[{}] intercept failure", t.getMessage(), clazz, method.getName());
+            logger.warn(t.getMessage() + " class["+clazz+"] before static method["+method.getName()+"] intercept failure");
         }
 
         Object ret = null;
@@ -71,14 +72,14 @@ public class StaticMethodsInter {
             try {
                 interceptor.handleMethodException(clazz, method, allArguments, method.getParameterTypes(), t);
             } catch (Throwable t2) {
-                logger.error("{} class[{}] handle static method[{}] exception failure", t2.getMessage(), clazz, method.getName(), t2.getMessage());
+                logger.warn(t2.getMessage() + " class["+clazz+"] handle static method["+method.getName()+"] exception failure");
             }
             throw t;
         } finally {
             try {
                 ret = interceptor.afterMethod(clazz, method, allArguments, method.getParameterTypes(), ret);
             } catch (Throwable t) {
-                logger.error("{} class[{}] after static method[{}] intercept failure:{}",t.getMessage(), clazz, method.getName(), t.getMessage());
+                logger.warn(t.getMessage() + " class["+clazz+"] after static method["+method.getName()+"] intercept failure:{}"+ t.getMessage());
             }
         }
         return ret;

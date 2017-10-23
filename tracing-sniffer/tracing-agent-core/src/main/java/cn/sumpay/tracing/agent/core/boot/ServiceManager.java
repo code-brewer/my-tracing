@@ -1,7 +1,6 @@
 package cn.sumpay.tracing.agent.core.boot;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,7 +17,7 @@ public enum ServiceManager {
 
     INSTANCE;
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceManager.class);
+    private static final BootLogger logger = BootLogger.getLogger(ServiceManager.class);
     private Map<Class, BootService> bootedServices = new HashMap<Class, BootService>();
 
     public void boot() {
@@ -34,7 +33,7 @@ public enum ServiceManager {
             try {
                 service.shutdown();
             } catch (Throwable e) {
-                logger.error("{} ServiceManager try to shutdown [{}] fail.",e.getMessage(), service.getClass().getName());
+                logger.warn(e.getMessage() + " ServiceManager try to shutdown [" +service.getClass().getName()+ "] fail.");
             }
         }
     }
@@ -54,7 +53,7 @@ public enum ServiceManager {
             try {
                 service.beforeBoot();
             } catch (Throwable e) {
-                logger.error("{} ServiceManager try to pre-start [{}] fail.", e.getMessage(),service.getClass().getName());
+                logger.warn(e.getMessage() + " ServiceManager try to pre-start [" +service.getClass().getName()+ "] fail.");
             }
         }
     }
@@ -64,7 +63,7 @@ public enum ServiceManager {
             try {
                 service.boot();
             } catch (Throwable e) {
-                logger.error("{} ServiceManager try to start [{}] fail.", e.getMessage(),service.getClass().getName());
+                logger.warn(e.getMessage() + " ServiceManager try to start ["+service.getClass().getName()+"] fail.");
             }
         }
     }
@@ -74,7 +73,7 @@ public enum ServiceManager {
             try {
                 service.afterBoot();
             } catch (Throwable e) {
-                logger.error("{} Service [{}] AfterBoot process fails.", e.getMessage(),service.getClass().getName());
+                logger.warn(e.getMessage() + " Service ["+service.getClass().getName()+"] AfterBoot process fails.");
             }
         }
     }

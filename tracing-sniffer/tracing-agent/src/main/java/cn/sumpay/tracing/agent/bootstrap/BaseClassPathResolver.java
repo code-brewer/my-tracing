@@ -1,14 +1,14 @@
 package cn.sumpay.tracing.agent.bootstrap;
 
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 import cn.sumpay.tracing.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
 /**
  * @author heyc
@@ -16,15 +16,15 @@ import java.util.jar.JarFile;
  */
 public class BaseClassPathResolver implements ClassPathResolver{
 
-    private Logger logger = LoggerFactory.getLogger(BaseClassPathResolver.class);
+    private BootLogger logger = BootLogger.getLogger(BaseClassPathResolver.class);
 
-    static final String VERSION_PATTERN = "(-[0-9]+\\.[0-9]+\\.[0-9]+((\\-SNAPSHOT)|(-RC[0-9]+))?)?";
+    static final String VERSION_PATTERN = "(-[0-9]+(\\.[0-9])+((-SNAPSHOT)|(-RELEASE)|(-RC[0-9]+))?)?";
 
     private String[] classPaths;
 
     private Set<String> baseJarSet;
 
-    private BootstrapJarFile bootstrapJarFile;
+    private BootstrapJarFile bootstrapJarFile = new BootstrapJarFile();
 
     public BaseClassPathResolver(){
         this(getClassPathFromSystemProperty().split(File.pathSeparator));
@@ -53,7 +53,7 @@ public class BaseClassPathResolver implements ClassPathResolver{
             }
             return true;
         }catch (Exception e){
-            logger.error("verify error: {}",e.getMessage());
+            logger.warn("verify error: " + e.getMessage());
             return false;
         }
     }
@@ -84,8 +84,20 @@ public class BaseClassPathResolver implements ClassPathResolver{
     private String getFullJarPath(String jarName) {
         for (String classPath : classPaths) {
             if (classPath.contains(jarName)){
-                if ((jarName + VERSION_PATTERN + ".jar").matches(classPath.substring(classPath.indexOf(jarName)))){
-                    return classPath;
+                if (classPath.endsWith("classes")){
+                    String path = classPath.substring(0, classPath.lastIndexOf("classes"));
+                    File file = new File(path);
+                    File[] files = file.listFiles();
+                    for (File f : files){
+                        if (Pattern.compile(jarName + VERSION_PATTERN + "\\.jar").matcher(f.getName()).matches()){
+                            return path + f.getName();
+                        }
+                    }
+                }else {
+                    String fullJarName = classPath.substring(classPath.lastIndexOf(jarName));
+                    if (Pattern.compile(jarName + VERSION_PATTERN + "\\.jar").matcher(fullJarName).matches()){
+                        return classPath;
+                    }
                 }
             }
         }

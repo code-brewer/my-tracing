@@ -1,9 +1,8 @@
 package cn.sumpay.tracing.agent.core.conf;
 
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 import cn.sumpay.tracing.util.ConfigInitializer;
 import cn.sumpay.tracing.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +18,7 @@ import java.util.Properties;
  */
 public class SnifferConfigInitializer {
 
-    private static Logger logger = LoggerFactory.getLogger(SnifferConfigInitializer.class);
+    private static BootLogger logger = BootLogger.getLogger(SnifferConfigInitializer.class);
 
     private static String CONFIG_FILE_NAME = "/trace.config";
 
@@ -39,19 +38,19 @@ public class SnifferConfigInitializer {
                 logger.info("No config file found, according system property '-Dconfig'.");
                 configFileStream = loadConfigFromAgentFolder();
             } else {
-                logger.info("{} file found in class path.", CONFIG_FILE_NAME);
+                logger.info(CONFIG_FILE_NAME + " file found in class path.");
             }
         }
 
         if (configFileStream == null) {
-            logger.info("No {} found, tracing is going to run in default config.", CONFIG_FILE_NAME);
+            logger.info(CONFIG_FILE_NAME + " not found, tracing is going to run in default config.");
         } else {
             try {
                 Properties properties = new Properties();
                 properties.load(configFileStream);
                 ConfigInitializer.initialize(properties, Config.class);
             } catch (Exception e) {
-                logger.error("Failed to read the config file, tracing is going to run in default config.", e);
+                logger.warn("Failed to read the config file, tracing is going to run in default config.", e);
             }
         }
 
@@ -65,10 +64,12 @@ public class SnifferConfigInitializer {
         }
 
         if (StringUtil.isEmpty(Config.Agent.APPLICATION_CODE)) {
-            throw new ExceptionInInitializerError("'-DapplicationCode=' is missing.");
+            //throw new ExceptionInInitializerError("'-DapplicationCode=' is missing.");
+            logger.warn("'-DapplicationCode=' is missing.");
         }
         if (StringUtil.isEmpty(Config.Collector.SERVERS)) {
-            throw new ExceptionInInitializerError("'-Dservers=' is missing.");
+            //throw new ExceptionInInitializerError("'-Dservers=' is missing.");
+            logger.warn("'-Dservers=' is missing.");
         }
 
 
@@ -84,14 +85,14 @@ public class SnifferConfigInitializer {
             File configFile = new File(agentBasePath, CONFIG_FILE_NAME);
             if (configFile.exists() && configFile.isFile()) {
                 try {
-                    logger.info("{} file found in agent folder.", CONFIG_FILE_NAME);
+                    logger.info(CONFIG_FILE_NAME + " file found in agent folder.");
                     return new FileInputStream(configFile);
                 } catch (FileNotFoundException e) {
-                    logger.error(" {} Fail to load {} in path {}, according auto-agent-folder mechanism.",e.getMessage(), CONFIG_FILE_NAME, agentBasePath);
+                    logger.warn(e.getMessage() + " Fail to load " + CONFIG_FILE_NAME + " in path " + agentBasePath +  ", according auto-agent-folder mechanism.");
                 }
             }
         }
-        logger.info("No {} file found in agent folder.", CONFIG_FILE_NAME);
+        logger.info(CONFIG_FILE_NAME + " file not found in agent folder.");
         return null;
     }
 
@@ -106,19 +107,19 @@ public class SnifferConfigInitializer {
         }
         File configFile = new File(config);
         if (configFile.exists() && configFile.isDirectory()) {
-            logger.info("check {} in path {}, according system property.", CONFIG_FILE_NAME, config);
+            logger.info("check " + CONFIG_FILE_NAME + " in path " + config + ", according system property.");
             configFile = new File(config, CONFIG_FILE_NAME);
         }
 
         if (configFile.exists() && configFile.isFile()) {
             try {
-                logger.info("found   {}, according system property.", configFile.getAbsolutePath());
+                logger.info("found " + configFile.getAbsolutePath() + ", according system property.");
                 return new FileInputStream(configFile);
             } catch (FileNotFoundException e) {
-                logger.error("{} Fail to load {} , according system property.", e.getMessage(),config);
+                logger.warn(e.getMessage() + " Fail to load " + config + "  , according system property.");
             }
         }
-        logger.info("No {}  found, according system property.", config);
+        logger.info(config + " not  found, according system property.");
         return null;
     }
 
@@ -133,13 +134,12 @@ public class SnifferConfigInitializer {
         URL resource = SnifferConfigInitializer.class.getClassLoader().getSystemClassLoader().getResource(classResourcePath);
         if (resource != null) {
             String urlString = resource.toString();
-            logger.debug(urlString);
-            urlString = urlString.substring(urlString.indexOf("file:"), urlString.indexOf('!'));
+            urlString = urlString.substring(urlString.indexOf("file:"), urlString.indexOf('!') == -1 ? urlString.length() : urlString.indexOf('!'));
             File agentJarFile = null;
             try {
                 agentJarFile = new File(new URL(urlString).getFile());
             } catch (MalformedURLException e) {
-                logger.error("{} Can not locate agent jar file by url:", e.getMessage(),urlString);
+                logger.warn(e.getMessage() + " Can not locate agent jar file by url:" + urlString);
                 e.printStackTrace();
             }
             if (agentJarFile.exists()) {

@@ -1,12 +1,11 @@
 package cn.sumpay.tracing.agent.core.plugin.interceptor.enhance;
 
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 import cn.sumpay.tracing.agent.core.plugin.PluginException;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.loader.InterceptorInstanceLoader;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import net.bytebuddy.implementation.bind.annotation.This;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The actual byte-buddy's interceptor to intercept constructor methods.
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConstructorInter {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConstructorInter.class);
+    private static final BootLogger logger = BootLogger.getLogger(ConstructorInter.class);
 
     /**
      * An {@link InstanceConstructorInterceptor}
@@ -50,7 +49,7 @@ public class ConstructorInter {
 
             interceptor.onConstruct(targetObject, allArguments);
         } catch (Throwable t) {
-            logger.error("ConstructorInter failure.", t);
+            logger.warn("ConstructorInter failure.", t);
         }
 
     }

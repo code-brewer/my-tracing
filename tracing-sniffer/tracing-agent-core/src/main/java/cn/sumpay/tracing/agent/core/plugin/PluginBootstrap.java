@@ -1,8 +1,7 @@
 package cn.sumpay.tracing.agent.core.plugin;
 
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.EnhancePluginDefine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.ServiceLoader;
  */
 public class PluginBootstrap {
 
-    private static final Logger logger = LoggerFactory.getLogger(PluginBootstrap.class);
+    private static final BootLogger logger = BootLogger.getLogger(PluginBootstrap.class);
 
     /**
      * load all plugins.
@@ -35,7 +34,7 @@ public class PluginBootstrap {
             try {
                 PluginCfg.INSTANCE.load(pluginUrl.openStream());
             } catch (Throwable t) {
-                logger.error("{} plugin file [{}] init failure.", t.getMessage(), pluginUrl);
+                logger.warn(t.getMessage() + " plugin file [" + pluginUrl + "] init failure.");
             }
         }
 
@@ -44,12 +43,12 @@ public class PluginBootstrap {
         List<AbstractClassEnhancePluginDefine> plugins = new ArrayList<AbstractClassEnhancePluginDefine>();
         for (PluginDefine pluginDefine : pluginClassList) {
             try {
-                logger.debug("loading plugin class {}.", pluginDefine.getDefineClass());
+                logger.info("loading plugin class " + pluginDefine.getDefineClass());
                 AbstractClassEnhancePluginDefine plugin =
                     (AbstractClassEnhancePluginDefine) Class.forName(pluginDefine.getDefineClass()).newInstance();
                 plugins.add(plugin);
             } catch (Throwable t) {
-                logger.error("{} load plugin [{}] failure.", t.getMessage(), pluginDefine.getDefineClass());
+                logger.warn(t.getMessage() + " load plugin [" + pluginDefine.getDefineClass() + "] failure.");
             }
         }
         return plugins;

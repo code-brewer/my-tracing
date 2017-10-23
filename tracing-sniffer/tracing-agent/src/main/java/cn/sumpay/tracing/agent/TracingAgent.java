@@ -6,7 +6,6 @@ import cn.sumpay.tracing.agent.bootstrap.ClassPathResolver;
 import cn.sumpay.tracing.agent.core.boot.ServiceManager;
 import cn.sumpay.tracing.agent.core.conf.SnifferConfigInitializer;
 import cn.sumpay.tracing.agent.core.plugin.PluginBootstrap;
-import cn.sumpay.tracing.agent.core.plugin.PluginException;
 import cn.sumpay.tracing.agent.core.plugin.PluginFinder;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.EnhancePluginDefine;
 import com.alibaba.ttl.threadpool.agent.TtlTransformer;
@@ -18,7 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.instrument.Instrumentation;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarFile;
 
 /**
@@ -33,19 +34,28 @@ public class TracingAgent {
         throw new InstantiationError( "Must not instantiate this class" );
     }
 
+    private static Set<String> bootstrapJars = new HashSet<String>();
+    static {
+        bootstrapJars.add("transmittable-thread-local");
+        bootstrapJars.add("tracing-core");
+        bootstrapJars.add("tracing-agent");
+        bootstrapJars.add("tracing-agent-core");
+        bootstrapJars.add("byte-buddy");
+    }
     /**
      * premain
      * @param agentArgs
      * @param instrumentation
-     * @throws PluginException
      */
-    public static void premain(String agentArgs, Instrumentation instrumentation) throws PluginException {
+    public static void premain(String agentArgs, Instrumentation instrumentation) {
 
         logger.info("******************** [agent start] ********************");
 
         logger.info("******************** [bootstrapClass.load] start.");
         final ClassPathResolver classPathResolver = new BaseClassPathResolver();
-        classPathResolver.addJarBaseName("transmittable-thread-local");
+        for (String bootstrapJar : bootstrapJars){
+            classPathResolver.addJarBaseName(bootstrapJar);
+        }
         if (!classPathResolver.verify()) {
             logger.warn("Agent Directory Verify fail. skipping agent loading.");
             logPinpointAgentLoadFail();
@@ -125,10 +135,12 @@ public class TracingAgent {
      * @param agentJarFile
      */
     private static void appendToBootstrapClassLoader(Instrumentation instrumentation, BootstrapJarFile agentJarFile) {
-        List<JarFile> jarFileList = agentJarFile.getJarFileList();
-        for (JarFile jarFile : jarFileList) {
-            logger.info("appendToBootstrapClassLoader:" + jarFile.getName());
-            instrumentation.appendToBootstrapClassLoaderSearch(jarFile);
+        if (agentJarFile != null && agentJarFile.getJarFileList() != null){
+            List<JarFile> jarFileList = agentJarFile.getJarFileList();
+            for (JarFile jarFile : jarFileList) {
+                logger.info("appendToBootstrapClassLoader:" + jarFile.getName());
+                instrumentation.appendToBootstrapClassLoaderSearch(jarFile);
+            }
         }
     }
 

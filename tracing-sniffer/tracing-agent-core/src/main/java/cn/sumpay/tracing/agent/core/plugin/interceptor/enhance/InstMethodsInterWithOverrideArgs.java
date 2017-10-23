@@ -1,10 +1,9 @@
 package cn.sumpay.tracing.agent.core.plugin.interceptor.enhance;
 
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 import cn.sumpay.tracing.agent.core.plugin.PluginException;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.loader.InterceptorInstanceLoader;
 import net.bytebuddy.implementation.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
@@ -15,7 +14,7 @@ import java.lang.reflect.Method;
  * @author wusheng
  */
 public class InstMethodsInterWithOverrideArgs {
-    private static final Logger logger = LoggerFactory.getLogger(InstMethodsInterWithOverrideArgs.class);
+    private static final BootLogger logger = BootLogger.getLogger(InstMethodsInterWithOverrideArgs.class);
 
     /**
      * An {@link InstanceMethodsAroundInterceptor}
@@ -59,7 +58,7 @@ public class InstMethodsInterWithOverrideArgs {
             interceptor.beforeMethod(targetObject, method, allArguments, method.getParameterTypes(),
                 result);
         } catch (Throwable t) {
-            logger.error("{} class[{}] before method[{}] intercept failure", t.getMessage(), obj.getClass(), method.getName());
+            logger.warn(t.getMessage()+" class["+obj.getClass()+"] before method["+method.getName()+"] intercept failure");
         }
 
         Object ret = null;
@@ -74,7 +73,7 @@ public class InstMethodsInterWithOverrideArgs {
                 interceptor.handleMethodException(targetObject, method, allArguments, method.getParameterTypes(),
                     t);
             } catch (Throwable t2) {
-                logger.error("{} class[{}] handle method[{}] exception failure", t2.getMessage(), obj.getClass(), method.getName());
+                logger.warn(t2.getMessage() + " class["+obj.getClass()+"] handle method["+method.getName()+"] exception failure");
             }
             throw t;
         } finally {
@@ -82,7 +81,7 @@ public class InstMethodsInterWithOverrideArgs {
                 ret = interceptor.afterMethod(targetObject, method, allArguments, method.getParameterTypes(),
                     ret);
             } catch (Throwable t) {
-                logger.error("{} class[{}] after method[{}] intercept failure", t.getMessage(), obj.getClass(), method.getName());
+                logger.warn(t.getMessage() + " class["+obj.getClass()+"] after method["+method.getName()+"] intercept failure");
             }
         }
         return ret;

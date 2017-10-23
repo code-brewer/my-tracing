@@ -12,8 +12,6 @@ import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.SuperMethodCall;
 import net.bytebuddy.implementation.bind.annotation.Morph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static net.bytebuddy.jar.asm.Opcodes.ACC_PRIVATE;
 import static net.bytebuddy.matcher.ElementMatchers.isStatic;
@@ -29,8 +27,6 @@ import static net.bytebuddy.matcher.ElementMatchers.not;
  * @author heyc
  */
 public abstract class ClassEnhancePluginDefine extends AbstractClassEnhancePluginDefine {
-    private static final Logger logger = LoggerFactory.getLogger(ClassEnhancePluginDefine.class);
-
     /**
      * New field name.
      */

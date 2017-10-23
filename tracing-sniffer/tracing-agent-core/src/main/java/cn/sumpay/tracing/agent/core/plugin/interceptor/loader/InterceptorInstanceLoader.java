@@ -1,10 +1,9 @@
 package cn.sumpay.tracing.agent.core.plugin.interceptor.loader;
 
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.InstanceConstructorInterceptor;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.InstanceMethodsAroundInterceptor;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.StaticMethodsAroundInterceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,7 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by wusheng on 16/8/2.
  */
 public class InterceptorInstanceLoader {
-    private static final Logger logger = LoggerFactory.getLogger(InterceptorInstanceLoader.class);
+    private static final BootLogger logger = BootLogger.getLogger(InterceptorInstanceLoader.class);
 
     private static ConcurrentHashMap<String, Object> INSTANCE_CACHE = new ConcurrentHashMap<String, Object>();
 
@@ -91,7 +90,7 @@ public class InterceptorInstanceLoader {
         BufferedInputStream is = null;
         ByteArrayOutputStream baos = null;
         try {
-            logger.debug("Read binary code of {} using classload {}", className, InterceptorInstanceLoader.class.getClassLoader());
+            logger.info("Read binary code of "+className+" using classload " + InterceptorInstanceLoader.class.getClassLoader());
             is = new BufferedInputStream(InterceptorInstanceLoader.class.getResourceAsStream(path));
             baos = new ByteArrayOutputStream();
             int ch = 0;
@@ -100,7 +99,7 @@ public class InterceptorInstanceLoader {
             }
             data = baos.toByteArray();
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            logger.warn(e.getMessage(), e);
         } finally {
             if (is != null){
                 try {
@@ -125,7 +124,7 @@ public class InterceptorInstanceLoader {
             }
         }
         defineClassMethod.setAccessible(true);
-        logger.debug("load binary code of {} to classloader {}", className, targetClassLoader);
+        logger.info("load binary code of "+className+" to classloader " +  targetClassLoader);
         Class<?> type = (Class<?>)defineClassMethod.invoke(targetClassLoader, className, data, 0, data.length, null);
         return (T)type.newInstance();
     }

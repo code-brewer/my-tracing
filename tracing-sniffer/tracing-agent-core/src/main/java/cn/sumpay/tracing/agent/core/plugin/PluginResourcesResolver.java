@@ -1,7 +1,6 @@
 package cn.sumpay.tracing.agent.core.plugin;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.sumpay.tracing.agent.core.logger.BootLogger;
 
 import java.io.IOException;
 import java.net.URL;
@@ -16,7 +15,7 @@ import java.util.List;
  * @author heyc
  */
 public class PluginResourcesResolver {
-    private static final Logger logger = LoggerFactory.getLogger(PluginResourcesResolver.class);
+    private static final BootLogger logger = BootLogger.getLogger(PluginResourcesResolver.class);
 
     public List<URL> getResources() {
         List<URL> cfgUrlPaths = new ArrayList<URL>();
@@ -26,11 +25,11 @@ public class PluginResourcesResolver {
             while (urls.hasMoreElements()) {
                 URL pluginUrl = urls.nextElement();
                 cfgUrlPaths.add(pluginUrl);
-                logger.info("find tracing plugin define in {}", pluginUrl);
+                logger.info("find tracing plugin define in " + pluginUrl);
             }
             return cfgUrlPaths;
         } catch (IOException e) {
-            logger.error("read resources failure.", e);
+            logger.warn("read resources failure.", e);
         }
         return null;
     }
