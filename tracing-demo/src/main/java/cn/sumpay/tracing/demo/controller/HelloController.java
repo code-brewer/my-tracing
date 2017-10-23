@@ -2,8 +2,6 @@ package cn.sumpay.tracing.demo.controller;
 
 import cn.sumpay.tracing.demo.service.HelloService;
 import cn.sumpay.tracing.trace.Trace;
-import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.impl.producer.DefaultMQProducerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +20,6 @@ public class HelloController {
 
     @Autowired
     HelloService helloService;
-
-    static DefaultMQProducerImpl producer;
-
-    static {
-        producer = new DefaultMQProducerImpl(null);
-    }
 
     /**
      *

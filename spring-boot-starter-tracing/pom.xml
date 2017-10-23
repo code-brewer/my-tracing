@@ -36,11 +36,11 @@
             <version>${project.version}</version>
         </dependency>
         <!-- dubbo -->
-        <dependency>
+        <!--<dependency>
             <groupId>cn.sumpay.tracing</groupId>
             <artifactId>tracing-dubbo</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>

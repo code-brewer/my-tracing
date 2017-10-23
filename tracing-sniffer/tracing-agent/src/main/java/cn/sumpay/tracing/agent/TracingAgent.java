@@ -1,5 +1,8 @@
 package cn.sumpay.tracing.agent;
 
+import cn.sumpay.tracing.agent.bootstrap.BaseClassPathResolver;
+import cn.sumpay.tracing.agent.bootstrap.BootstrapJarFile;
+import cn.sumpay.tracing.agent.bootstrap.ClassPathResolver;
 import cn.sumpay.tracing.agent.core.boot.ServiceManager;
 import cn.sumpay.tracing.agent.core.conf.SnifferConfigInitializer;
 import cn.sumpay.tracing.agent.core.plugin.PluginBootstrap;
@@ -15,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.instrument.Instrumentation;
+import java.util.List;
+import java.util.jar.JarFile;
 
 /**
  * @author heyc
@@ -37,6 +42,18 @@ public class TracingAgent {
     public static void premain(String agentArgs, Instrumentation instrumentation) throws PluginException {
 
         logger.info("******************** [agent start] ********************");
+
+        logger.info("******************** [bootstrapClass.load] start.");
+        final ClassPathResolver classPathResolver = new BaseClassPathResolver();
+        classPathResolver.addJarBaseName("transmittable-thread-local");
+        if (!classPathResolver.verify()) {
+            logger.warn("Agent Directory Verify fail. skipping agent loading.");
+            logPinpointAgentLoadFail();
+            return;
+        }
+        BootstrapJarFile bootstrapJarFile = classPathResolver.getBootstrapJarFile();
+        appendToBootstrapClassLoader(instrumentation, bootstrapJarFile);
+        logger.info("******************** [bootstrapClass.load] end.");
 
         logger.info("agentArgs: {}  instrumentation: {}",agentArgs,instrumentation);
         logger.info("******************** [TtlAgent.install] start.");
@@ -102,4 +119,26 @@ public class TracingAgent {
         logger.info("******************** [agent end] ********************");
     }
 
+    /**
+     * appendToBootstrapClassLoader
+     * @param instrumentation
+     * @param agentJarFile
+     */
+    private static void appendToBootstrapClassLoader(Instrumentation instrumentation, BootstrapJarFile agentJarFile) {
+        List<JarFile> jarFileList = agentJarFile.getJarFileList();
+        for (JarFile jarFile : jarFileList) {
+            logger.info("appendToBootstrapClassLoader:" + jarFile.getName());
+            instrumentation.appendToBootstrapClassLoaderSearch(jarFile);
+        }
+    }
+
+    /**
+     * logPinpointAgentLoadFail
+     */
+    private static void logPinpointAgentLoadFail() {
+        final String errorLog ="*****************************************************************************\n" +
+                                "* Pinpoint Agent load failure\n" +
+                                "*****************************************************************************";
+        System.err.println(errorLog);
+    }
 }
