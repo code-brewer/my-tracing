@@ -1,7 +1,6 @@
 package cn.sumpay.tracing.demo.controller;
 
 import cn.sumpay.tracing.demo.service.HelloService;
-import cn.sumpay.tracing.trace.Trace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ public class HelloController {
      */
     @RequestMapping("hello")
     @ResponseBody
-    @Trace
     public String helloController(String say){
        LOG.info("系统日志：" + say);
        return helloService.helloService(say);

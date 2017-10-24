@@ -22,6 +22,38 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.slf4j:*</exclude>
+                                    <exclude>org.aspectj:aspectjweaver:jar:</exclude>
+                                    <exclude>com.alibaba:transmittable-thread-local:jar:</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>net.bytebuddy</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.net.bytebuddy</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.alibaba.fastjson</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.com.alibaba.fastjson</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.0.2</version>
                 <configuration>

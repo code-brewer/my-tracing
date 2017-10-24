@@ -4,9 +4,6 @@ import cn.sumpay.tracing.agent.core.logger.BootLogger;
 import cn.sumpay.tracing.util.StringUtil;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
@@ -20,11 +17,11 @@ public class BaseClassPathResolver implements ClassPathResolver{
 
     static final String VERSION_PATTERN = "(-[0-9]+(\\.[0-9])+((-SNAPSHOT)|(-RELEASE)|(-RC[0-9]+))?)?";
 
+    static final String AGENT_JAR_NAME = "tracing-agent";
+
+    private String agentPath;
+
     private String[] classPaths;
-
-    private Set<String> baseJarSet;
-
-    private BootstrapJarFile bootstrapJarFile = new BootstrapJarFile();
 
     public BaseClassPathResolver(){
         this(getClassPathFromSystemProperty().split(File.pathSeparator));
@@ -32,6 +29,8 @@ public class BaseClassPathResolver implements ClassPathResolver{
 
     public BaseClassPathResolver(String[] classPaths){
         this.classPaths = classPaths;
+        String agentFullPath = getFullJarPath(AGENT_JAR_NAME);
+        this.agentPath = agentFullPath.substring(0,agentFullPath.lastIndexOf(AGENT_JAR_NAME));
     }
 
     public static String getClassPathFromSystemProperty() {
@@ -39,41 +38,19 @@ public class BaseClassPathResolver implements ClassPathResolver{
     }
 
     @Override
-    public boolean verify() {
-        if (baseJarSet == null || baseJarSet.isEmpty()){
-            return true;
-        }
+    public JarFile getJarFile(String jarName){
         try {
-            Iterator<String> iterator = baseJarSet.iterator();
-            while (iterator.hasNext()){
-                String fullJarPath = getFullJarPath(iterator.next());
-                if (!StringUtil.isEmpty(fullJarPath)){
-                    bootstrapJarFile.append(new JarFile(fullJarPath));
-                }
+            String fullJarPath = getFullJarPath(jarName);
+            if (!StringUtil.isEmpty(fullJarPath)){
+                logger.info("find jarFile :" + fullJarPath);
+                return new JarFile(fullJarPath);
             }
-            return true;
+            logger.warn("can not find jarFile :" + jarName);
+            return null;
         }catch (Exception e){
             logger.warn("verify error: " + e.getMessage());
-            return false;
+            return null;
         }
-    }
-
-    @Override
-    public void addJarBaseName(String jarBaseName) {
-        if (StringUtil.isEmpty(jarBaseName)){
-            return;
-        }
-        synchronized (this){
-            if (baseJarSet == null){
-                baseJarSet = new HashSet<String>();
-            }
-            baseJarSet.add(jarBaseName);
-        }
-    }
-
-    @Override
-    public BootstrapJarFile getBootstrapJarFile() {
-        return bootstrapJarFile;
     }
 
     /**
@@ -86,8 +63,7 @@ public class BaseClassPathResolver implements ClassPathResolver{
             if (classPath.contains(jarName)){
                 if (classPath.endsWith("classes")){
                     String path = classPath.substring(0, classPath.lastIndexOf("classes"));
-                    File file = new File(path);
-                    File[] files = file.listFiles();
+                    File[] files = new File(path).listFiles();
                     for (File f : files){
                         if (Pattern.compile(jarName + VERSION_PATTERN + "\\.jar").matcher(f.getName()).matches()){
                             return path + f.getName();

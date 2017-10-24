@@ -1,14 +1,12 @@
 package cn.sumpay.tracing.agent.bootstrap;
 
+import java.util.jar.JarFile;
+
 /**
  * @author heyc
  */
 public interface ClassPathResolver {
 
-    boolean verify();
-
-    void addJarBaseName(String jarBaseName);
-
-    BootstrapJarFile getBootstrapJarFile();
+    JarFile getJarFile(String jarName);
 
 }
