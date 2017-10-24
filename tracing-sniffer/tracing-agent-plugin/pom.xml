@@ -15,5 +15,12 @@
         <module>dubbo-plugin</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.sumpay.tracing</groupId>
+            <artifactId>tracing-agent-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

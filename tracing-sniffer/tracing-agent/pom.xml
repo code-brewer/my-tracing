@@ -17,6 +17,11 @@
             <artifactId>tracing-agent-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.sumpay.tracing</groupId>
+            <artifactId>dubbo-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -32,6 +37,11 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>tracing-plugin.def</resource>
+                                </transformer>
+                            </transformers>
                             <artifactSet>
                                 <excludes>
                                     <exclude>org.slf4j:*</exclude>
@@ -47,6 +57,10 @@
                                 <relocation>
                                     <pattern>com.alibaba.fastjson</pattern>
                                     <shadedPattern>${project.groupId}.dependencies.com.alibaba.fastjson</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.opentracing</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.io.opentracing</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

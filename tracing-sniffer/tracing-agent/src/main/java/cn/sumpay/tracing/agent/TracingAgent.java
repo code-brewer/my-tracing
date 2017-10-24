@@ -44,7 +44,7 @@ public class TracingAgent {
         SnifferConfigInitializer.initialize();
         logger.info("******************** [SnifferConfigInitializer.initialize] success.");
 
-        final PluginFinder pluginFinder = new PluginFinder(new PluginBootstrap().spiLoad());
+        final PluginFinder pluginFinder = new PluginFinder(new PluginBootstrap().loadPlugins());
 
         logger.info("******************** [service boot] start.");
         ServiceManager.INSTANCE.boot();

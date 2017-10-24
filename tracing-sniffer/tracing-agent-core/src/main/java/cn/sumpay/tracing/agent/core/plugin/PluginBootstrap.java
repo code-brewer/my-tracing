@@ -21,13 +21,13 @@ public class PluginBootstrap {
      *
      * @return plugin definition list.
      */
-    public List<AbstractClassEnhancePluginDefine> loadPlugins() {
+    public List<EnhancePluginDefine> loadPlugins() {
         PluginResourcesResolver resolver = new PluginResourcesResolver();
         List<URL> resources = resolver.getResources();
 
         if (resources == null || resources.size() == 0) {
             logger.info("no plugin files (tracing-plugin.def) found, continue to start application.");
-            return new ArrayList<AbstractClassEnhancePluginDefine>();
+            return new ArrayList<EnhancePluginDefine>();
         }
 
         for (URL pluginUrl : resources) {
@@ -40,13 +40,11 @@ public class PluginBootstrap {
 
         List<PluginDefine> pluginClassList = PluginCfg.INSTANCE.getPluginClassList();
 
-        List<AbstractClassEnhancePluginDefine> plugins = new ArrayList<AbstractClassEnhancePluginDefine>();
+        List<EnhancePluginDefine> plugins = new ArrayList<EnhancePluginDefine>();
         for (PluginDefine pluginDefine : pluginClassList) {
             try {
                 logger.info("loading plugin class " + pluginDefine.getDefineClass());
-                AbstractClassEnhancePluginDefine plugin =
-                    (AbstractClassEnhancePluginDefine) Class.forName(pluginDefine.getDefineClass()).newInstance();
-                plugins.add(plugin);
+                plugins.add((EnhancePluginDefine) Class.forName(pluginDefine.getDefineClass()).newInstance());
             } catch (Throwable t) {
                 logger.warn(t.getMessage() + " load plugin [" + pluginDefine.getDefineClass() + "] failure.");
             }

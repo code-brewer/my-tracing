@@ -26,6 +26,7 @@
             <artifactId>dubbo</artifactId>
             <version>${dubbo.version}</version>
             <scope>provided</scope>
+            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
