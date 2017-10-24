@@ -7,10 +7,10 @@ import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.EnhancedInstance;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.InstanceMethodsAroundInterceptor;
 import cn.sumpay.tracing.agent.core.plugin.interceptor.enhance.MethodInterceptResult;
 import cn.sumpay.tracing.context.TracingContext;
+import cn.sumpay.tracing.util.JsonUtil;
 import com.alibaba.dubbo.rpc.Invocation;
 import com.alibaba.dubbo.rpc.Invoker;
 import com.alibaba.dubbo.rpc.RpcContext;
-import com.alibaba.fastjson.JSONObject;
 import io.opentracing.NoopTracer;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
@@ -79,7 +79,7 @@ public class DubboInterceptor implements InstanceMethodsAroundInterceptor {
             localSpan.set(span);
             /** 添加属性 **/
             if(TracerConfig.REQUEST){
-                span.setTag("request", JSONObject.toJSONString(invocation.getArguments()));
+                span.setTag("request", JsonUtil.toJsonString(invocation.getArguments()));
             }
             span.setTag(TracerAttachment.TYPE,"dubbo");
             span.setTag(TracerAttachment.METHOD,invocation.getMethodName());
@@ -96,7 +96,7 @@ public class DubboInterceptor implements InstanceMethodsAroundInterceptor {
             Span span = localSpan.get();
             if (span != null){
                 if (TracerConfig.RESPONSE){
-                    span.setTag("response",JSONObject.toJSONString(ret));
+                    span.setTag("response",JsonUtil.toJsonString(ret));
                 }
                 span.finish();
             }

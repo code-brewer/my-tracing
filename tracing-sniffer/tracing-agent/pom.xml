@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.sumpay.tracing</groupId>
-            <artifactId>tracing-agent-core</artifactId>
+            <artifactId>tracing-zipkin</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -46,21 +46,55 @@
                                 <excludes>
                                     <exclude>org.slf4j:*</exclude>
                                     <exclude>org.aspectj:aspectjweaver:jar:</exclude>
-                                    <exclude>com.alibaba:transmittable-thread-local:jar:</exclude>
+                                    <exclude>junit:*</exclude>
+                                    <exclude>org.assertj:*</exclude>
+                                    <exclude>org.hamcrest:*</exclude>
                                 </excludes>
                             </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>log4j2.properties</exclude>
+                                        <exclude>logback-spring.xml</exclude>
+                                        <exclude>logback.xml</exclude>
+                                        <exclude>META-INF/LICENSE</exclude>
+                                        <exclude>META-INF/NOTICE</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                             <relocations>
                                 <relocation>
                                     <pattern>net.bytebuddy</pattern>
                                     <shadedPattern>${project.groupId}.dependencies.net.bytebuddy</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.alibaba.fastjson</pattern>
-                                    <shadedPattern>${project.groupId}.dependencies.com.alibaba.fastjson</shadedPattern>
+                                    <pattern>com.fasterxml.jackson</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.com.fasterxml.jackson</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>io.opentracing</pattern>
                                     <shadedPattern>${project.groupId}.dependencies.io.opentracing</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>zipkin2</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.zipkin2</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>zipkin</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.zipkin</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>brave</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.brave</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.twitter</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.com.twitter</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.github</pattern>
+                                    <shadedPattern>${project.groupId}.dependencies.com.github</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

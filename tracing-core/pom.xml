@@ -16,9 +16,15 @@
         <slf4j.version>1.7.25</slf4j.version>
         <aspectj.version>1.8.10</aspectj.version>
         <fastjson.version>1.1.41</fastjson.version>
+        <jackson.version>2.9.2</jackson.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>cn.sumpay.tracing</groupId>
+            <artifactId>tracing-toolkit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -41,9 +47,19 @@
             <version>${aspectj.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <!--<dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>

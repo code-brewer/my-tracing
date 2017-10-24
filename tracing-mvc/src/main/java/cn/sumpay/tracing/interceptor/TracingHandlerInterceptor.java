@@ -4,7 +4,7 @@ import cn.sumpay.tracing.TracerAttachment;
 import cn.sumpay.tracing.TracerConfig;
 import cn.sumpay.tracing.TracerFactory;
 import cn.sumpay.tracing.context.TracingContext;
-import com.alibaba.fastjson.JSONObject;
+import cn.sumpay.tracing.util.JsonUtil;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
@@ -60,7 +60,7 @@ public class TracingHandlerInterceptor extends HandlerInterceptorAdapter {
             Tracer.SpanBuilder spanBuilder = tracer.buildSpan(request.getServletPath()).withTag(Tags.SPAN_KIND.getKey(),Tags.SPAN_KIND_CLIENT);
             Span span = spanBuilder.startManual();
             if (TracerConfig.REQUEST && requestEnable){
-                span.setTag("request",JSONObject.toJSONString(request.getParameterMap()));
+                span.setTag("request", JsonUtil.toJsonString(request.getParameterMap()));
             }
             span.setTag(TracerAttachment.TYPE,"mvc");
             span.setTag(TracerAttachment.METHOD,request.getRequestURI());

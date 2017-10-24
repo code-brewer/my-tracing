@@ -18,6 +18,7 @@
         <module>spring-boot-starter-tracing</module>
         <module>tracing-rocketmq</module>
         <module>tracing-sniffer</module>
+        <module>tracing-toolkit</module>
     </modules>
 
     <properties>

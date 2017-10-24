@@ -4,7 +4,7 @@ import cn.sumpay.tracing.TracerAttachment;
 import cn.sumpay.tracing.TracerConfig;
 import cn.sumpay.tracing.TracerFactory;
 import cn.sumpay.tracing.context.TracingContext;
-import com.alibaba.fastjson.JSONObject;
+import cn.sumpay.tracing.util.JsonUtil;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
@@ -62,7 +62,7 @@ public class TraceAspect {
                 }
                 span = spanBuilder.startManual();
                 if(TracerConfig.REQUEST && trace.request()){
-                    span.setTag("request", JSONObject.toJSONString(joinPoint.getArgs()));
+                    span.setTag("request", JsonUtil.toJsonString(joinPoint.getArgs()));
                 }
                 span.setTag(TracerAttachment.TYPE,"local");
                 span.setTag(TracerAttachment.METHOD,method.getName());
@@ -76,7 +76,7 @@ public class TraceAspect {
         try {
             if (trace != null){
                 if (TracerConfig.RESPONSE && trace.response()){
-                    span.setTag("response",JSONObject.toJSONString(result));
+                    span.setTag("response",JsonUtil.toJsonString(result));
                 }
                 span.finish();
                 if (origSpan != null){

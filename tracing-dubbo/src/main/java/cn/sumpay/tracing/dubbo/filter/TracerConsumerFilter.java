@@ -4,10 +4,10 @@ import cn.sumpay.tracing.TracerAttachment;
 import cn.sumpay.tracing.TracerFactory;
 import cn.sumpay.tracing.TracerConfig;
 import cn.sumpay.tracing.context.TracingContext;
+import cn.sumpay.tracing.util.JsonUtil;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
-import com.alibaba.fastjson.JSONObject;
 import io.opentracing.NoopTracer;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -35,6 +35,7 @@ public class TracerConsumerFilter implements Filter{
      * @return
      * @throws RpcException
      */
+    @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         /** 不记录 **/
         Tracer tracer = TracerFactory.DEFAULT.getTracer();
@@ -65,10 +66,10 @@ public class TracerConsumerFilter implements Filter{
                 if (span != null){
                     /** 添加属性 **/
                     if(TracerConfig.REQUEST){
-                        span.setTag("request", JSONObject.toJSONString(invocation.getArguments()));
+                        span.setTag("request", JsonUtil.toJsonString(invocation.getArguments()));
                     }
                     if (TracerConfig.RESPONSE){
-                        span.setTag("response",JSONObject.toJSONString(result));
+                        span.setTag("response",JsonUtil.toJsonString(result));
                     }
                     span.setTag(TracerAttachment.TYPE,"dubbo");
                     span.setTag(TracerAttachment.METHOD,invocation.getMethodName());
